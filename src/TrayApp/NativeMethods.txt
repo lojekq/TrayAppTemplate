@@ -1,0 +1,6 @@
+// CsWin32: one Win32 API per line. Only append lines (00-shared §9).
+RegisterHotKey
+UnregisterHotKey
+DwmGetWindowAttribute
+DwmSetWindowAttribute
+DWM_WINDOW_CORNER_PREFERENCE
