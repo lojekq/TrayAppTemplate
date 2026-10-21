@@ -17,13 +17,16 @@ public static partial class Log
     public static string? Verb { get; set; }
     public static string Dir => Path.Combine(AppInfo.DataDir, "logs");
 
+    /// <summary>Set after "Remove data": no write may recreate the data folder.</summary>
+    public static bool Off { get; set; }
+
     public static void Info(string message) => Write("INFO ", message, null);
     public static void Warn(string message, Exception? e = null) => Write("WARN ", message, e);
     public static void Error(string message, Exception? e = null) => Write("ERROR", message, e);
 
     static void Write(string level, string message, Exception? e)
     {
-        if (Args.Current.Demo) return; // --demo writes no data files
+        if (Off || Args.Current.Demo) return; // --demo writes no data files
         try
         {
             lock (Gate)

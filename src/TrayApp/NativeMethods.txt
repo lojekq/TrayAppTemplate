@@ -4,3 +4,4 @@ UnregisterHotKey
 DwmGetWindowAttribute
 DwmSetWindowAttribute
 DWM_WINDOW_CORNER_PREFERENCE
+RECT
