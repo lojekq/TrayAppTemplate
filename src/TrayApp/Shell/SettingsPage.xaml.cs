@@ -15,9 +15,9 @@ public partial class SettingsPage
         var s = Settings.Current;
         Select(LanguageBox, s.Language);
         Select(ThemeBox, s.Theme);
-        AutostartSwitch.IsChecked = Autostart.IsEnabled;
+        AutostartSwitch.IsChecked = !Args.Current.Demo && Autostart.IsEnabled; // --demo: same picture on every PC
         AutostartNote.Text = Autostart.IsDisabledByUser ? Loc.T("Settings.Autostart.DisabledByUser") : "";
-        StartMenuSwitch.IsChecked = StartMenu.Exists;
+        StartMenuSwitch.IsChecked = !Args.Current.Demo && StartMenu.Exists;
         UpdatesSwitch.IsChecked = s.CheckUpdates;
         AppSectionHost.Content = AppSection?.Invoke();
 

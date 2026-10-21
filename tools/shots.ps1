@@ -3,7 +3,8 @@
 # into docs/<page>-<theme>-<lang>.png, then oxipng. Run from the repo root; the path must have no spaces.
 param([string[]]$Pages = @('main', 'settings'))
 $ErrorActionPreference = 'Stop'; $PSNativeCommandUseErrorActionPreference = $true
-$App = (Get-ChildItem src -Directory | Select-Object -First 1).Name
+$Pages = $Pages -split ','   # pwsh -File passes "main,settings" as one string
+$App =(Get-ChildItem src -Directory | Select-Object -First 1).Name
 dotnet build "src/$App" -c Release | Out-Null
 $exe = "src/$App/bin/Release/net10.0-windows/$App.exe"
 New-Item -ItemType Directory docs -Force | Out-Null

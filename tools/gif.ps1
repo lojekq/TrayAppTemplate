@@ -8,7 +8,8 @@ param(
   [switch]$Scene,
   [int]$X = 1080, [int]$Y = 344, [int]$W = 1280, [int]$H = 720,
   [int]$Seconds = 8,
-  [int]$Fps = 15, [int]$Width = 800    # over 3 MB: -Fps 12 or -Width 720
+  [int]$Fps = 15, [int]$Width = 800,   # over 3 MB: -Fps 12 or -Width 720
+  [string]$Out = "docs/demo-$Lang.gif"
 )
 $ErrorActionPreference = 'Stop'; $PSNativeCommandUseErrorActionPreference = $true
 $App = (Get-ChildItem src -Directory | Select-Object -First 1).Name
@@ -16,8 +17,8 @@ dotnet build "src/$App" -c Release | Out-Null
 $exe = "src/$App/bin/Release/net10.0-windows/$App.exe"
 $raw = "$env:TEMP\$App-raw.mkv"; $pal = "$env:TEMP\$App-pal.png"   # own names: sessions record in parallel
 $rect = "$env:TEMP\$App-rect.txt"; Remove-Item $rect -ErrorAction Ignore
-$gif = "docs/demo-$Lang.gif"
-New-Item -ItemType Directory docs -Force | Out-Null
+$gif = $Out
+New-Item -ItemType Directory (Split-Path $gif) -Force | Out-Null
 
 $lock = 'C:\Demo\desktop.lock'
 while ($true) {
