@@ -1,6 +1,7 @@
 using System.Diagnostics;
 using System.Windows;
 using TrayApp.Demo;
+using TrayApp.Features;
 using TrayApp.Shell;
 
 namespace TrayApp;
@@ -34,6 +35,11 @@ public partial class App : Application
         Log.Info($"start {AppInfo.Version}{(a.Unknown.Count > 0 ? $", {a.Unknown.Count} unknown argument(s)" : "")}");
 
         if (a.Demo) DemoData.Fill();
+        else if (Install.IsInstalled) InstalledStart(); // Debug builds and exes in Downloads write nothing by themselves
+
+        // App features: services, hotkeys, tray items, settings section (template sample below)
+        SettingsPage.AppSection = SampleSettings.Create;
+        SampleSettings.Apply();
 
         window = new MainWindow();
         if (a.Width > 0) (window.Width, window.Height) = (a.Width, a.Height);
@@ -74,11 +80,28 @@ public partial class App : Application
         if (page is not null) window.Navigate(page);
     }
 
+    /// <summary>The exe is in %LOCALAPPDATA%\Programs\&lt;App&gt;\: repair paths if it moved, first start turns the Start menu shortcut on.</summary>
+    static void InstalledStart()
+    {
+        try
+        {
+            Autostart.FixPath();
+            StartMenu.FixPath();
+            if (Settings.Current.FirstRunDone) return;
+            StartMenu.Set(true);
+            Settings.Current.FirstRunDone = true;
+            Settings.Save();
+        }
+        catch (Exception e) { Log.Error("installed start", e); }
+    }
+
     public static void RaiseExiting()
     {
         var hook = Exiting;
         Exiting = null; // once, whoever comes first
-        hook?.Invoke();
+        foreach (var h in hook?.GetInvocationList() ?? [])
+            try { ((Action)h)(); }
+            catch (Exception e) { Log.Error("Exiting hook failed", e); } // the other hooks still run
     }
 
     public static void Quit(bool confirm = true)

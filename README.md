@@ -31,7 +31,9 @@ After the fan-out the template is frozen: a fix to `Shell/` goes into this repo 
 **Layout:** `src/TrayApp/Shell/` is the shared frame (do not edit it in an app), `Features/` is the app,
 `Demo/` holds `--demo` data and the `--autoplay` scenario, `Resources/` the EN and RU strings.
 Extension points: verbs in `Program.Verbs`, `partial class Settings`, `SettingsPage.AppSection`, `Tray.Create(..., appItems)`,
-`App.Exiting`, `App.ConfirmExit`, `App.RemoveData`, pages in `MainWindow.xaml`.
+`App.Exiting`, `App.ConfirmExit`, `App.RemoveData`, pages in `MainWindow.xaml`; `Features/SampleSettings.cs` shows a settings section with a hotkey.
+Helpers in `Shell/` for two or more apps (00-shared §2.4): `MessageWindow`, `Hotkeys` + `HotkeyBox`, `AtomicFile`, `Install`, `ProcessInfo`,
+`CmdLine`, `ConsoleTool`, `UserBusy`, `Monitors`, `TopWindows`, `WinEvents`, `ExeIcon`, `UninstallEntries`, `Paths`; signing: `tools/sign-release.ps1`.
 
 | Command | What it does |
 |---|---|
@@ -44,7 +46,9 @@ Extension points: verbs in `Program.Verbs`, `partial class Settings`, `SettingsP
 **Spikes (phase 1, 2026-10-21, .NET SDK 10.0.402, Windows 11 26300):**
 - An MSTest.Sdk 4.5.1 test project references the WPF WinExe project (`net10.0-windows`): `dotnet test` passes in Debug and Release, WPF types load in tests. MSTest.Sdk needs `<ImplicitUsings>enable</ImplicitUsings>` for `[TestClass]` without `using`.
 - A WinExe started with redirected stdio (node `child_process.spawn` with pipes, as Claude Code starts MCP servers, with and without `windowsHide`; and a pwsh pipe) reads and writes through `Console.OpenStandardInput/Output`: JSON lines, Cyrillic and a 1 MB line arrive intact, the exit code comes back. No console window: `GetConsoleWindow()` is 0, PE subsystem 2 (GUI).
-- Release pipeline, screenshots and GIF on this demo window: see the end of this section after the trial release.
+- Trial tag `v0.0.1-test` with immutable releases on: CI built both files (self-contained exe 64.6 MB, framework-dependent zip 3.0 MB), SHA256SUMS matched, `gh attestation verify` passed for the exe and the zip, the pre-release was created and is immutable, notes came from the annotated tag, Defender found nothing, the downloaded exe started. The release and the tag were then deleted (allowed with immutable releases).
+- Pipeline on this demo window at 100 %: `shots.ps1` (12 PNG, 2200×1400), window GIF EN/RU (800×496, 0.3 MB), scene GIF on `-offset_x 1080 -offset_y 344` (region hit exactly; not committed: the desktop around the window is in the frame), `social.ps1` (42 KB). Not checked yet: `shots.ps1` and `gif.ps1` on a 150 % monitor (waits for the owner's display slot).
+- Helpers on the owner's PC: `Monitors.Snapshot()` returns exactly `Layouts.Owner`; `RegisterHotKey` on a combination held by another process gives error 1409 and the box shows "taken by another program".
 
 **Decisions taken in the template (deviations from the spec):**
 - CsWin32 0.3.358: 0.3.366 is younger than two weeks (00-shared §2.1).

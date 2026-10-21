@@ -31,7 +31,9 @@
 **Устройство:** `src/TrayApp/Shell/` — общий каркас (в программах не правится), `Features/` — сама программа,
 `Demo/` — данные `--demo` и сценарий `--autoplay`, `Resources/` — строки EN и RU.
 Точки расширения: глаголы в `Program.Verbs`, `partial class Settings`, `SettingsPage.AppSection`, `Tray.Create(..., appItems)`,
-`App.Exiting`, `App.ConfirmExit`, `App.RemoveData`, страницы в `MainWindow.xaml`.
+`App.Exiting`, `App.ConfirmExit`, `App.RemoveData`, страницы в `MainWindow.xaml`; `Features/SampleSettings.cs` — пример своей секции настроек с хоткеем.
+Помощники в `Shell/` для двух и более программ (00-shared §2.4): `MessageWindow`, `Hotkeys` + `HotkeyBox`, `AtomicFile`, `Install`, `ProcessInfo`,
+`CmdLine`, `ConsoleTool`, `UserBusy`, `Monitors`, `TopWindows`, `WinEvents`, `ExeIcon`, `UninstallEntries`, `Paths`; подпись: `tools/sign-release.ps1`.
 
 | Команда | Что делает |
 |---|---|
@@ -44,7 +46,9 @@
 **Спайки (фаза 1, 2026-10-21, .NET SDK 10.0.402, Windows 11 26300):**
 - Тест-проект MSTest.Sdk 4.5.1 ссылается на WPF-проект WinExe (`net10.0-windows`): `dotnet test` проходит в Debug и Release, типы WPF в тестах грузятся. MSTest.Sdk нужен `<ImplicitUsings>enable</ImplicitUsings>`, иначе `[TestClass]` без `using` не находится.
 - WinExe с перенаправленным stdio (node `child_process.spawn` с pipe, как Claude Code запускает MCP-серверы, с `windowsHide` и без; и pipe из pwsh) читает и пишет через `Console.OpenStandardInput/Output`: JSON-строки, кириллица и строка в 1 МБ доходят целыми, код выхода возвращается. Консольного окна нет: `GetConsoleWindow()` = 0, PE subsystem 2 (GUI).
-- Конвейер релиза, скриншоты и GIF на этом демо-окне: см. конец раздела после пробного релиза.
+- Пробный тег `v0.0.1-test` при включённых immutable releases: CI собрал оба файла (self-contained exe 64.6 МБ, framework-dependent zip 3.0 МБ), SHA256SUMS сошлись, `gh attestation verify` прошёл для exe и zip, pre-release создан и помечен immutable, заметки взяты из аннотированного тега, Defender ничего не нашёл, скачанный exe запустился. Затем релиз и тег удалены (с immutable releases это разрешено).
+- Конвейер на этом демо-окне при 100 %: `shots.ps1` (12 PNG, 2200×1400), оконный GIF EN/RU (800×496, 0.3 МБ), сценовый GIF на `-offset_x 1080 -offset_y 344` (область попала точно; в репо не положен: в кадре рабочий стол вокруг окна), `social.ps1` (42 КБ). Не проверено: `shots.ps1` и `gif.ps1` на мониторе со 150 % (ждёт дисплейного слота владельца).
+- Помощники на ПК владельца: `Monitors.Snapshot()` даёт ровно `Layouts.Owner`; `RegisterHotKey` на сочетание, занятое другим процессом, даёт ошибку 1409, и поле показывает «занято другой программой».
 
 **Решения шаблона (отступления от спеки):**
 - CsWin32 0.3.358: 0.3.366 моложе двух недель (00-shared §2.1).

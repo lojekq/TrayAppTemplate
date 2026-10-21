@@ -43,6 +43,7 @@ Open the folder?</value></data>
   <data name="Hotkey.Placeholder" xml:space="preserve"><value>Press a key combination</value></data>
   <data name="Hotkey.Busy" xml:space="preserve"><value>Taken by another program</value></data>
   <data name="Hotkey.Failed" xml:space="preserve"><value>Could not register</value></data>
+  <data name="Sample.Hotkey" xml:space="preserve"><value>Hotkey to show the window</value></data>
   <data name="Main.Title" xml:space="preserve"><value>Tasks</value></data>
   <data name="Main.Subtitle" xml:space="preserve"><value>Sample page of the template. Replace it with the app's own pages.</value></data>
   <data name="Main.Empty" xml:space="preserve"><value>Nothing here yet.</value></data>
