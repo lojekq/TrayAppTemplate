@@ -52,6 +52,8 @@ Helpers in `Shell/` for two or more apps (00-shared §2.4): `MessageWindow`, `Ho
 
 **Installer (2026-10-21, after the freeze):** the exe installs itself into `%LOCALAPPDATA%\Programs\<App>\<App>.exe` (no admin), updates an older install (the running copy exits through the single-instance channel), registers in Settings → Apps and uninstalls with `--uninstall`; release assets have no version in the name (`<App>.exe`, `<App>-fd.zip`). Checked from `C:\Demo` with 0.9.1–0.9.3: install, update while running, an older exe opens the installed one, uninstall with and without data, "Run without installing" remembered per path.
 
+**Dev instances (2026-10-23):** Debug builds and tests never meet the installed copy: data in `%APPDATA%\<App>-dev` and `%LOCALAPPDATA%\<App>-dev`, mutex, events, pipes and AUMID with `-dev` (`AppInfo.InstanceName`), "(dev)" in the title, no Run value, shortcut, Apps entry, installer or update check. A Release build is checked the same way with `<APP>_DATA_DIR=<folder>` or `--data-dir <folder>`. Checked: an installed copy, a Debug build and a Release build with `--data-dir` run side by side and each start wakes only its own instance.
+
 **Decisions taken in the template (deviations from the spec):**
 - CsWin32 0.3.358: 0.3.366 is younger than two weeks (00-shared §2.1).
 - `MessageWindow` is a hidden top-level tool window, not `HWND_MESSAGE`: message-only windows do not receive broadcasts (WM_SETTINGCHANGE, WM_DISPLAYCHANGE, WM_POWERBROADCAST).
